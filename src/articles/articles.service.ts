@@ -22,7 +22,10 @@ export class ArticlesService {
   }
 
   findOne(id: number) {
-    return this.prisma.article.findUniqueOrThrow({ where: { id } });
+    return this.prisma.article.findUniqueOrThrow({
+      where: { id },
+      include: { author: true },
+    });
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
