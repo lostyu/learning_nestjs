@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import { hashRounding } from '../src/users/users.service';
 
 const prisma = new PrismaClient({
   log: [
@@ -10,13 +12,16 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
+  const hashedPassword1 = await bcrypt.hash('123123', hashRounding);
+  const hashedPassword2 = await bcrypt.hash('111111', hashRounding);
+
   const user1 = await prisma.user.upsert({
     where: { email: 'tonysoul@foxmail.com' },
     update: {},
     create: {
       name: 'tony',
       email: 'tonysoul@foxmail.com',
-      password: '123123',
+      password: hashedPassword1,
     },
   });
   const user2 = await prisma.user.upsert({
@@ -25,7 +30,7 @@ async function main() {
     create: {
       name: 'tom',
       email: 'tom@163.com',
-      password: '111111',
+      password: hashedPassword2,
     },
   });
 
